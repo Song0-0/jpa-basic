@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -16,17 +15,23 @@ public class JpaMain {
         tx.begin();
 
         try {
-            //조회
-//            Member findMember = em.find(Member.class, 1L);
-//            findMember.setName("HelloJPA");
 
-            //JPQL (Member 객체를 대상으로 한다. (대상이 테이블이 아니다))
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .getResultList();
+            //비영속 상태
+//            Member member = new Member();
+//            member.setId(101L);
+//            member.setName("HelloJPA");
 
-            for (Member member : result) {
-                System.out.println("member.getName() = " + member.getName());
-            }
+            //영속 상태 : entityManager안에 있는 영속성 컨텍스트를 통해서 member가 관리가 되는 상태이다.
+
+//            em.persist(member);
+            //회원 엔티티를 영속성 컨텍스트에서 분리, 준영속 상태
+//            em.detach(member);
+
+            Member findMember1 = em.find(Member.class, 101L);
+            Member findMember2 = em.find(Member.class, 101L);
+
+            //영속 엔티티의 동일성 보장
+            System.out.println("result = " + (findMember1 == findMember2));
 
             tx.commit();
         } catch (Exception e) {
